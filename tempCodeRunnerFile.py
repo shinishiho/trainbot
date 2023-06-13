@@ -12,7 +12,7 @@ def init():
     ctk.set_default_color_theme(theme)
     ctk.set_widget_scaling(scaling)
     
-    app=UI(width, height, scaling)
+    app=UI(width, height)
     app.mainloop()
     
 def main():
