@@ -16,8 +16,8 @@ def init():
     app.mainloop()
     
 def main():
+    print("Starting bot...")
     return
                 
 if __name__ == '__main__':
     init()
-    main()

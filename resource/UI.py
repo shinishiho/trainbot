@@ -1,5 +1,6 @@
 from typing import Optional, Tuple, Union
 import customtkinter as ctk
+import bot
 
 class UI(ctk.CTk):
     def __init__(self, width=800, height=600, scaling=1, fg_color: str | Tuple[str, str] | None = None, **kwargs):
@@ -14,6 +15,8 @@ class UI(ctk.CTk):
         
         self.tab_view = TabView(parent=self)
         self.tab_view.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+        # Create start button
+        self.start_button = ctk.CTkButton(self, text="Start", command=main)
         
 class TabView(ctk.CTkTabview):
     def __init__(self, parent, **kwargs):

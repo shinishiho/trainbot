@@ -1,0 +1,8 @@
+{
+    "CONNECTION_ERROR": "Failed to connect to emulator",
+    "CONNECTION_SUCCESS": "Connected to emulator",
+    "STARTUP_ERROR": "Failed to start the game",
+    "STARTUP_SUCCESS": "Game started",
+    "ADB_MISSING": "ADB executable not found or broken, please download it from https://developer.android.com/studio/releases/platform-tools.html and place it in the same folder as this program",
+    "ADB_FOUND": "ADB executable found"
+}
