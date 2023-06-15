@@ -1,13 +1,8 @@
 import configparser
 import subprocess
 import json
-from PIL import Image
-import io
-import sys
 import time
-sys.path.append('./')
-from resource.logger import logger
-from resource.check_pixel import check_pixel
+from resource import logger, check_pixel, take_screenshot
 
 def start():
     try:
@@ -48,9 +43,7 @@ def complete():
         if i > 5:
             logger.critical("STARTUP_TIMEOUT")
             exit()
-        output = subprocess.check_output(['adb', 'exec-out', 'screencap', '-p'])
-        image = Image.open(io.BytesIO(output))
-        if check_pixel(image, coords["StartupComplete"]["x"], coords["StartupComplete"]["y"], coords["StartupComplete"]["color"], 0.95):
+        if check_pixel(take_screenshot(), coords["StartupComplete"]["x"], coords["StartupComplete"]["y"], coords["StartupComplete"]["color"], 0.95):
             subprocess.check_output(['adb', 'shell', 'input', 'touchscreen', 'swipe', '1000', '500', '500', '500'])
             logger.info("STARTUP_COMPLETE")
             break

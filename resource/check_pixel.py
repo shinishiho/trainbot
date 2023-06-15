@@ -1,6 +1,4 @@
-import sys
-sys.path.append('./')
-from resource.logger import logger
+from resource import logger
 
 def scaled_coords(x, y, reference_width, reference_height, actual_width, actual_height):
     scaled_x = int((x / reference_width) * actual_width)
