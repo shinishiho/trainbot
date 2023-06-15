@@ -1,6 +1,7 @@
 import json
 import configparser
 import logging
+import datetime
 
 def load_strings(json_file):
     with open(json_file, 'r') as file:
@@ -18,7 +19,8 @@ class TranslationFormatter(logging.Formatter):
     def format(self, record):
         message = record.getMessage()
         translation = strings.get(message, message)
-        record.msg = translation
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        record.msg = f"{timestamp} - {translation}"
         return super().format(record)
 handler = logging.StreamHandler()
 handler.setFormatter(TranslationFormatter())

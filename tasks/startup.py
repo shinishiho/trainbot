@@ -1,20 +1,24 @@
 import configparser
 import subprocess
+import json
+from PIL import Image
+import io
 import sys
+import time
 sys.path.append('./')
 from resource.logger import logger
+from resource.check_pixel import check_pixel
 
-def check_adb():
+def start():
     try:
         output = subprocess.check_output(['adb', 'version'])
     except:
         logger.critical("ADB_MISSING")
-        return False
     if output.decode('utf-8').find('Android Debug Bridge') == -1:
         logger.critical("ADB_MISSING")
-        return False
-    logger.info("ADB_FOUND")
-    return True
+    else:
+        logger.info("ADB_FOUND")
+        connect()
 
 def connect():
     config = configparser.ConfigParser()
@@ -26,15 +30,29 @@ def connect():
         logger.critical("CONNECTION_ERROR")
     else:
         logger.info("CONNECTION_SUCCESS")
-        startup()
+        runapp(addr, port)
 
-def startup():
-    output = subprocess.check_output(['adb', 'shell', 'monkey', '-p', 'air.com.pixelfederation.TrainStationGame', '-c', 'android.intent.category.LAUNCHER', '1'])
+def runapp(addr, port):
+    output = subprocess.check_output(['adb', '-s', addr + ':' + port, 'shell', 'am', 'start', '-n', 'air.com.pixelfederation.TrainStationGame/com.google.firebase.MessagingUnityPlayerActivity'])
     if output.decode('utf-8').find('Error') != -1:
         print('Failed to start app')
         logger.critical("STARTUP_ERROR")
-    logger.info("STARTUP_SUCCESS")
+    else:
+        logger.info("STARTUP_SUCCESS")
     
-if __name__ == '__main__':
-    if check_adb():
-        connect()
+def complete():
+    with open('data/coords.json', 'r') as file:
+        coords = json.load(file)
+    i = 0
+    while True:
+        if i > 5:
+            logger.critical("STARTUP_TIMEOUT")
+            exit()
+        output = subprocess.check_output(['adb', 'exec-out', 'screencap', '-p'])
+        image = Image.open(io.BytesIO(output))
+        if check_pixel(image, coords["StartupComplete"]["x"], coords["StartupComplete"]["y"], coords["StartupComplete"]["color"], 0.95):
+            subprocess.check_output(['adb', 'shell', 'input', 'touchscreen', 'swipe', '1000', '500', '500', '500'])
+            logger.info("STARTUP_COMPLETE")
+            break
+        i += 1
+        time.sleep(5)

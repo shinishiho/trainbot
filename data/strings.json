@@ -1,8 +1,13 @@
 {
-    "CONNECTION_ERROR": "Failed to connect to emulator",
+    "CONNECTION_ERROR": "Failed to connect to emulator. Please check if the emulator is running and if the ADB server is running. Make sure the port is correct.",
     "CONNECTION_SUCCESS": "Connected to emulator",
     "STARTUP_ERROR": "Failed to start the game",
     "STARTUP_SUCCESS": "Game started",
+    "STARTUP_TIMEOUT": "The game is stuck, please restart manually",
+    "STARTUP_COMPLETE": "Main screen detected",
     "ADB_MISSING": "ADB executable not found or broken, please download it from https://developer.android.com/studio/releases/platform-tools.html and place it in the same folder as this program",
-    "ADB_FOUND": "ADB executable found"
+    "ADB_FOUND": "ADB executable found",
+    "SCRRENSHOT_ERRROR": "Failed to take screenshot. Retrying in 5 seconds",
+    "SCREENSHOT_RETRY_EXCEEDED": "Failed to take screenshot. Aborting...",
+    "SCREENSHOT_OK": "Screenshot taken"
 }

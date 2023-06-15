@@ -1,0 +1,39 @@
+{
+    "StartupComplete": {
+        "x": 1202,
+        "y": 55,
+        "color": [212,172,53]
+    },
+    "TrainBtn": {
+        "x": 180,
+        "y": 955
+    },
+    "ItemBtn": {
+        "x": 400,
+        "y": 955
+    },
+    "StationBtn": {
+        "x": 620,
+        "y": 955
+    },  
+    "FeatsBtn": {
+        "x": 840,
+        "y": 955
+    },
+    "ContractsBtn": {
+        "x": 1060,
+        "y": 955
+    },
+    "GiftsBtn": {
+        "x": 1280,
+        "y": 955
+    },
+    "MuseumBtn": {
+        "x": 1500,
+        "y": 955
+    },
+    "FriendsBtn": {
+        "x": 1720,
+        "y": 955
+    }
+}
