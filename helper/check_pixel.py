@@ -1,12 +1,12 @@
 from helper import logger
 
-def scaled_coords(x, y, reference_width, reference_height, actual_width, actual_height):
-    scaled_x = int((x / reference_width) * actual_width)
-    scaled_y = int((y / reference_height) * actual_height)
+def scaled_coords(x, y, width, height):
+    scaled_x = int((x / 1920) * width)
+    scaled_y = int((y / 1080) * height)
     return scaled_x, scaled_y
 
 def check_pixel(image, x, y, color, threshold=0.9):
-    coord_x, coord_y = scaled_coords(x, y, 1920, 1080, image.width, image.height)
+    coord_x, coord_y = scaled_coords(x, y, image.width, image.height)
     pixel = image.getpixel((coord_x, coord_y))
     r = 1 - abs(pixel[0] - color[0])/255
     g = 1 - abs(pixel[1] - color[1])/255

@@ -1,7 +1,39 @@
 import cv2
 import numpy as np
-from helper import check_pixel, load_coords
+from helper import logger, check_pixel, load_coords, load_config, save_config, click, swipe, take_screenshot
+from tasks import watch_ad
 
+config = load_config()
+coords = load_coords()
+def metropolis(resend):
+    if not resend:
+        config.set('LocalTrain', 'destination', config.get('LocalTrain', 'def_dest'))
+        logger.info('METROPOLIS_CLOSED')
+        save_config(config)
+        return
+    
+    click(coords['TrainBtn']['x'], coords['TrainBtn']['y'])
+    swipe(500, 250, 500, 750)
+    screen = take_screenshot()
+    
+    metro = 'Closed'
+    for state in ['Open', 'Video']:
+        r = check_pixel(screen, coords[f"Metropolis{state}"]['x'], coords[f"Metropolis{state}"]['y'], coords[f"Metropolis{state}"]['color'])
+        if r:
+            metro = state
+    
+    if metro == 'Video':
+        click(coords['MetropolisVideo']['x'], coords['MetropolisVideo']['y'])
+        logger.info('METROPOLIS_VIDEO')
+        if config.getboolean('LocalTrain', 'metropolis_ad'):     
+            watch_ad.run()
+        else:
+            metro = 'Closed'
+    if metro == 'Closed':
+        return
+    config.set('LocalTrain', 'destination', 'Metropolis')
+    logger.info('METROPOLIS_OPEN')
+    save_config(config)
 
 def local_state(image):
     image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2GRAY)
@@ -24,5 +56,15 @@ def run(image):
     state = local_state(image)
     if state == 'arrv':
         return
-    coords = load_coords()
+    
     resend = check_pixel(image, coords['Resend']['x'], coords['Resend']['y'], coords['Resend']['color'])
+    if resend and config.get('LocalTrain', 'destination') == 'Metropolis':
+        click(coords['Resend']['x'], coords['Resend']['y'])
+        logger.info('RESEND')
+    metropolis(resend)
+    if config.get('LocalTrain', 'destination') != 'Metropolis':
+        click(coords['Resend']['x'], coords['Resend']['y'])
+        logger.info('RESEND')
+    
+    # Send dest
+        

@@ -1,3 +1,4 @@
 pyautogui
 customtkinter
 pillow
+paddleocr

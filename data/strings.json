@@ -9,5 +9,10 @@
     "ADB_FOUND": "ADB executable found",
     "SCRRENSHOT_ERRROR": "Failed to take screenshot. Retrying...",
     "SCREENSHOT_RETRY_EXCEEDED": "Failed to take screenshot. Aborting...",
-    "SCREENSHOT_OK": "Screenshot taken"
+    "SCREENSHOT_OK": "Screenshot taken",
+    "OCR": "Screen OCR complete",
+    "METROPOLIS_OPEN": "Metropolis station opened",
+    "METROPOLIS_CLOSED": "Metropolis station closed",    
+    "METROPOLIS_VIDEO": "Metropolis station ad reopen available",
+    "RESEND": "Resending trains to previous destination"
 }

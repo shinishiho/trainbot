@@ -1,6 +1,7 @@
 import subprocess
 import time
-from helper import logger, check_pixel, take_screenshot, load_coords, load_config, swipe
+from helper import logger, check_pixel, take_screenshot, load_coords, load_config, save_config, swipe
+config = load_config()
 
 def start():
     try:
@@ -14,9 +15,8 @@ def start():
         connect()
 
 def connect():
-    config = load_config()
-    addr = config.get('Connection', 'address')
-    port = config.get('Connection', 'port')
+    addr = config.get('Emulator', 'address')
+    port = config.get('Emulator', 'port')
     output = subprocess.check_output(['adb', 'connect', addr + ':' + port])
     if output.decode('utf-8').find('connected') == -1:
         logger.critical("CONNECTION_ERROR")
@@ -39,8 +39,12 @@ def complete():
         if i > 5:
             logger.critical("STARTUP_TIMEOUT")
             exit()
-        if check_pixel(take_screenshot(), coords["StartupComplete"]["x"], coords["StartupComplete"]["y"], coords["StartupComplete"]["color"], 0.95):
+        screenshot = take_screenshot()
+        if check_pixel(screenshot, coords["StartupComplete"]["x"], coords["StartupComplete"]["y"], coords["StartupComplete"]["color"], 0.95):
             swipe(1000, 500, 500, 500)
+            config.set('Emulator', 'width', screenshot.width)
+            config.set('Emulator', 'height', screenshot.height)
+            save_config(config)
             logger.info("STARTUP_COMPLETE")
             break
         i += 1

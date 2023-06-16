@@ -29,6 +29,10 @@
         "y": 815,
         "color": [57,181,74]
     },
+    "FirstTrain": {
+        "x": 590,
+        "y": 830
+    },
     "TrainBtn": {
         "x": 180,
         "y": 955
@@ -60,5 +64,25 @@
     "FriendsBtn": {
         "x": 1720,
         "y": 955
+    },
+    "MetropolisOpen": {
+        "x": 1800,
+        "y": 55,
+        "color": [212,172,53]
+    },
+    "MetropolisVideo": {
+        "x": 1800,
+        "y": 55,
+        "color": [212,172,53]
+    },
+    "MetropolisClose": {
+        "x": 1800,
+        "y": 55,
+        "color": [212,172,53]
+    },
+    "SendTrainPage": {
+        "x": 1800,
+        "y": 55,
+        "color": [212,172,53]
     }
 }
