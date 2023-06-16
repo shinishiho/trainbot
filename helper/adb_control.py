@@ -35,7 +35,7 @@ def click(x, y):
     x, y = scaled_coords(x, y)
     subprocess.check_output(['adb', 'shell', 'input', 'touchscreen', 'tap', str(x), str(y)])
     logger.debug(f"Clicked at coordinates: {str(x)} {str(y)}")
-    time.sleep(0.2)
+    time.sleep(0.3)
     
 def swipe(x1, y1, x2, y2):
     x1, y1 = scaled_coords(x1, y1)
