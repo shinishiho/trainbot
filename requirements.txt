@@ -1,4 +1,4 @@
 pyautogui
 customtkinter
 pillow
-paddleocr
+pytesseract

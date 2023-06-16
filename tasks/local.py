@@ -64,6 +64,7 @@ def send():
                 click(coords['CloseTrainSend']['x'], coords['CloseTrainSend']['y'])
                 complete = True
                 break
+            i += 1
             time.sleep(1)
 
 def local_state(image):

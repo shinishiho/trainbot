@@ -16,5 +16,6 @@
     "METROPOLIS_VIDEO": "Metropolis station ad reopen available",
     "RESEND": "Resending trains to previous destination",
     "WATCH_AD": "Watching ad",
-    "AD_COMPLETE": "Ad complete, bonus received"
+    "AD_COMPLETE": "Ad complete, bonus received",
+    "BUY": "Running low on EXP, buying WAGR"
 }

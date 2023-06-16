@@ -47,3 +47,8 @@ def back():
     subprocess.check_output(['adb', 'shell', 'input', 'keyevent', 'KEYCODE_BACK'])
     logger.debug("Pressed back button")
     time.sleep(0.5)
+    
+def text(text):
+    subprocess.check_output(['adb', 'shell', 'input', 'text', text])
+    logger.debug(f"Sent text '{text}'") 
+    time.sleep(0.5)

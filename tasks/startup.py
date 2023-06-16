@@ -1,6 +1,6 @@
 import subprocess
 import time
-from helper import logger, check_pixel, take_screenshot, load_coords, load_config, save_config, swipe
+from helper import logger, check_pixel, take_screenshot, load_coords, load_config, save_config, swipe, click
 config = load_config()
 
 def start():
@@ -49,3 +49,4 @@ def complete():
             break
         i += 1
         time.sleep(5)
+        click(coords["CloseOffer"]["x"], coords["CloseOffer"]["y"])
