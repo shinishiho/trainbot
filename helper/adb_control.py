@@ -42,3 +42,8 @@ def swipe(x1, y1, x2, y2):
     x2, y2 = scaled_coords(x2, y2)
     subprocess.check_output(['adb', 'shell', 'input', 'touchscreen', 'swipe', str(x1), str(y1), str(x2), str(y2)])
     logger.debug(f"Swiped from {str(x1)} {str(y1)} to {str(x2)} {str(y2)}")
+    
+def back():
+    subprocess.check_output(['adb', 'shell', 'input', 'keyevent', 'KEYCODE_BACK'])
+    logger.debug("Pressed back button")
+    time.sleep(0.5)

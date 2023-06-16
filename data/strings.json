@@ -14,5 +14,7 @@
     "METROPOLIS_OPEN": "Metropolis station opened",
     "METROPOLIS_CLOSED": "Metropolis station closed",    
     "METROPOLIS_VIDEO": "Metropolis station ad reopen available",
-    "RESEND": "Resending trains to previous destination"
+    "RESEND": "Resending trains to previous destination",
+    "WATCH_AD": "Watching ad",
+    "AD_COMPLETE": "Ad complete, bonus received"
 }

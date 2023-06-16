@@ -1,5 +1,5 @@
-from tasks import startup, state, local, expr
-from helper import logger, take_screenshot
+from tasks import startup, state, local
+from helper import take_screenshot
 
 def main():
     startup.start()
@@ -12,7 +12,7 @@ def main():
         if states['Bonus']:
             local.bonus()
         if states['ExprTrain']:
-            expr.run()
+            pass
 
 if __name__ == '__main__':
     main()

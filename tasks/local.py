@@ -1,6 +1,5 @@
 import time
-from helper import logger, check_pixel, load_coords, load_config, save_config, click, swipe, take_screenshot
-from tasks import watch_ad
+from helper import logger, check_pixel, load_coords, load_config, save_config, click, swipe, take_screenshot, back
 
 config = load_config()
 coords = load_coords()
@@ -24,8 +23,12 @@ def metropolis(resend):
             metro = state
     if metro == 'Video':
         logger.info('METROPOLIS_VIDEO')
-        if config.getboolean('LocalTrain', 'metro_ad'):     
-            watch_ad.run()
+        if config.getboolean('LocalTrain', 'metro_ad'):
+            click(coords['MetropolisVideo']['x'], coords['MetropolisVideo']['y'])
+            logger.info('WATCH_AD')
+            time.sleep(45)
+            logger.info('AD_COMPLETE')
+            back()
         else:
             metro = 'Closed'
     click(coords['CloseTrainSend']['x'], coords['CloseTrainSend']['y'])
