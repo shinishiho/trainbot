@@ -1,4 +1,4 @@
-from tasks import startup, state, local, popup, exp
+from tasks import startup, local, popup, exp
 from helper import take_screenshot, load_coords, check_pixel
 import asyncio
 
@@ -14,16 +14,16 @@ def check_state(image, state):
     states[state] = check_pixel(image, coords[state]['x'], coords[state]['y'], coords[state]['color'])
 
 async def locl(image):
-    if state.check_state(image, 'LocalTrain'):
+    if check_state(image, 'LocalTrain'):
         local.run(image)
         exp.run(image)
         
 async def bonus(image):
-    if state.check_state(image, 'Bonus'):
+    if check_state(image, 'Bonus'):
         local.bonus()
 
 async def popup(image):
-    if state.check_state(image, 'Popup'):
+    if check_state(image, 'Popup'):
         popup.run(image)
 
 async def main():
