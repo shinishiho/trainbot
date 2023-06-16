@@ -2,6 +2,8 @@ import re
 import time
 import datetime
 import pytesseract
+import cv2
+import numpy as np
 from helper import logger, check_pixel, load_coords, load_config, save_config, click, swipe, take_screenshot, back
 
 config = load_config()
@@ -34,7 +36,7 @@ def metropolis():
         x2, y2 = int((1000 / 1080) * screen.height), int((500 / 1080) * screen.height)
         image = screen.crop((x1, y1, x2, y2))
         result = pytesseract.image_to_string(image)
-        logger.debug("Metropolis time remaining OCR result: " + result)
+        logger.info("Metropolis refresh time: " + result)
         match = re.search(r'(\d+)h (\d+)m', result)
         if match:
             hours = int(match.group(1))
@@ -73,29 +75,30 @@ def send():
                 break
             i += 1
             time.sleep(1)  
-# Rewrite run()
+
 def run(image):
-    resend = check_pixel(image, coords['Resend']['x'], coords['Resend']['y'], coords['Resend']['color'])
-    if resend:
-        if config.get('LocalTrain', 'destination') == 'Metropolis':
+    if config.get('LocalTrain', 'destination') == 'Metropolis':
+        img = np.array(image)
+        template = cv2.imread('template/resend.png')
+        template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        result = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
+        _, max_val, _, _ = cv2.minMaxLoc(result)
+        logger.debug('OpenCV matchTemplate result: confidence ' + str(max_val))
+        if max_val > 0.9:
             click(coords['Resend']['x'], coords['Resend']['y'])
             click(coords['Resend']['x'], coords['Resend']['y'])
             logger.info('RESEND')
             time.sleep(6)
         else:
-            next_metro = config.get('LocalTrain', 'next_metro')
-            if datetime.datetime.now() > datetime.datetime.strptime(next_metro, "%Y-%m-%d %H:%M:%S"):
-                metropolis()
-            else:
-                click(coords['Resend']['x'], coords['Resend']['y'])
-                click(coords['Resend']['x'], coords['Resend']['y'])
-                logger.info('RESEND')
-                time.sleep(6)
+            metropolis()
         return
-    arrvd = check_pixel(image, coords['LocalTrainArrv1']['x'], coords['LocalTrainArrv1']['y'], coords['LocalTrainArrv1']['color']) and \
-        check_pixel(image, coords['LocalTrainArrv2']['x'], coords['LocalTrainArrv2']['y'], coords['LocalTrainArrv2']['color'])
-    pending = check_pixel(image, coords['LocalTrainPen1']['x'], coords['LocalTrainPen1']['y'], coords['LocalTrainPen1']['color']) or \
-        check_pixel(image, coords['LocalTrainPen2']['x'], coords['LocalTrainPen2']['y'], coords['LocalTrainPen2']['color'])
-    if arrvd or pending:
-        send()
-    time.sleep(1)
+    else:
+        next_metro = datetime.datetime.strptime(config.get('LocalTrain', 'next_metro'), "%Y-%m-%d %H:%M:%S")
+        if datetime.datetime.now() < next_metro:
+            click(coords['Resend']['x'], coords['Resend']['y'])
+            click(coords['Resend']['x'], coords['Resend']['y'])
+            logger.info('RESEND')
+        else:
+            metropolis()
+        return
