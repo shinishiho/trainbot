@@ -7,8 +7,10 @@ def main():
     while True:
         image = take_screenshot()
         states = state.check_state(image)
-        if states["LocalTrain"] == 1:
+        if states["LocalTrain"]:
             local.run(image)
+        if states['Bonus']:
+            local.bonus()
 
 if __name__ == '__main__':
     main()

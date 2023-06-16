@@ -1,9 +1,13 @@
 import logging
 import datetime
-from helper import load_strings, load_config
+import json
+import configparser
 
-strings = load_strings()
-config = load_config()
+strings = {}
+with open('data/strings.json') as f:
+    strings = json.load(f)
+config = configparser.ConfigParser()
+config.read('config.ini')
 loglevel = config.getint('UI', 'loglvl')
 logger = logging.getLogger('my_logger')
 logger.setLevel(loglevel)

@@ -1,10 +1,13 @@
 import subprocess
 import io
 from PIL import Image
-from helper import logger, load_config
+import configparser
+from helper import logger
+import time
 
 def scaled_coords(x, y):
-    config = load_config()
+    config = configparser.ConfigParser()
+    config.read('config.ini')
     w = config.getint('Emulator', 'width')
     h = config.getint('Emulator', 'height')
     scaled_x = int((x / 1920) * w)
@@ -31,10 +34,11 @@ def take_screenshot():
 def click(x, y):
     x, y = scaled_coords(x, y)
     subprocess.check_output(['adb', 'shell', 'input', 'touchscreen', 'tap', str(x), str(y)])
-    logger.debug(f"Executed click command 'adb shell input touchsreen tap {str(x)} {str(y)}'")
+    logger.debug(f"Clicked at coordinates: {str(x)} {str(y)}")
+    time.sleep(0.2)
     
 def swipe(x1, y1, x2, y2):
     x1, y1 = scaled_coords(x1, y1)
     x2, y2 = scaled_coords(x2, y2)
     subprocess.check_output(['adb', 'shell', 'input', 'touchscreen', 'swipe', str(x1), str(y1), str(x2), str(y2)])
-    logger.debug(f"Executed swipe command 'adb shell input touchscreen swipe {str(x1)} {str(y1)} {str(x2)} {str(y2)}'")
+    logger.debug(f"Swiped from {str(x1)} {str(y1)} to {str(x2)} {str(y2)}")

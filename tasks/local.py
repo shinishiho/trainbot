@@ -1,5 +1,4 @@
-import cv2
-import numpy as np
+import time
 from helper import logger, check_pixel, load_coords, load_config, save_config, click, swipe, take_screenshot
 from tasks import watch_ad
 
@@ -14,18 +13,20 @@ def metropolis(resend):
     
     click(coords['TrainBtn']['x'], coords['TrainBtn']['y'])
     swipe(500, 250, 500, 750)
+    click(coords['SendTrainBtn']['x'], coords['SendTrainBtn']['y'])
     screen = take_screenshot()
+    if check_pixel(screen, coords['SendTrainBtn']['x'], coords['SendTrainBtn']['y'], coords['SendTrainBtn']['color']):
+        click(coords['SendTrainBtn']['x'], coords['SendTrainBtn']['y'])
+        screen = take_screenshot()
     
     metro = 'Closed'
     for state in ['Open', 'Video']:
         r = check_pixel(screen, coords[f"Metropolis{state}"]['x'], coords[f"Metropolis{state}"]['y'], coords[f"Metropolis{state}"]['color'])
         if r:
             metro = state
-    
     if metro == 'Video':
-        click(coords['MetropolisVideo']['x'], coords['MetropolisVideo']['y'])
         logger.info('METROPOLIS_VIDEO')
-        if config.getboolean('LocalTrain', 'metropolis_ad'):     
+        if config.getboolean('LocalTrain', 'metro_ad'):     
             watch_ad.run()
         else:
             metro = 'Closed'
@@ -35,36 +36,59 @@ def metropolis(resend):
     logger.info('METROPOLIS_OPEN')
     save_config(config)
 
+def send():
+    screen = take_screenshot()
+    if not check_pixel(screen, coords['CloseTrainSend']['x'], coords['CloseTrainSend']['y'], coords['CloseTrainSend']['color'], 0.99):
+        click(coords['TrainBtn']['x'], coords['TrainBtn']['y'])
+        click(coords['SendTrainBtn']['x'], coords['SendTrainBtn']['y'])
+        click(coords['SendTrainBtn']['x'], coords['SendTrainBtn']['y'])
+    complete = False
+    while not complete:
+        if config.get('LocalTrain', 'destination') == 'Metropolis':
+            click(coords['MetropolisOpen']['x'], coords['MetropolisOpen']['y'])
+        else:
+            click(coords['5min']['x'], coords['5min']['y'])
+        while True:
+            screen = take_screenshot()
+            if check_pixel(screen, coords['SendTrainBtn']['x'], coords['SendTrainBtn']['y'], coords['SendTrainBtn']['color']):
+                click(coords['SendTrainBtn']['x'], coords['SendTrainBtn']['y'])
+                click(coords['SendTrainBtn']['x'], coords['SendTrainBtn']['y'])
+                break
+            if check_pixel(screen, coords['SendTrainComplete']['x'], coords['SendTrainComplete']['y'], coords['SendTrainComplete']['color']):
+                click(coords['CloseTrainSend']['x'], coords['CloseTrainSend']['y'])
+                complete = True
+                break
+            time.sleep(1)
+
 def local_state(image):
-    image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2GRAY)
-    arrvd = cv2.imread('template/arrvd.png', cv2.IMREAD_GRAYSCALE)
-    arrv = cv2.imread('template/arrv.png', cv2.IMREAD_GRAYSCALE)
-    pending = cv2.imread('template/pending.png', cv2.IMREAD_GRAYSCALE)
-    
-    arrvd = cv2.matchTemplate(image, arrvd, cv2.TM_CCOEFF_NORMED)
-    arrv = cv2.matchTemplate(image, arrv, cv2.TM_CCOEFF_NORMED)
-    pending = cv2.matchTemplate(image, pending, cv2.TM_CCOEFF_NORMED)
-    
-    r = {
-        'arrvd': cv2.minMaxLoc(arrvd)[1],
-        'arrv': cv2.minMaxLoc(arrv)[1],
-        'pending': cv2.minMaxLoc(pending)[1]
-    }
-    return max(r, key=r.get)
-    
+    if check_pixel(image, coords['LocalTrainPen1']['x'], coords['LocalTrainPen1']['y'], coords['LocalTrainPen1']['color']) or \
+        check_pixel(image, coords['LocalTrainPen2']['x'], coords['LocalTrainPen2']['y'], coords['LocalTrainPen2']['color']):
+        return 'pending'
+    if check_pixel(image, coords['LocalTrainArrv1']['x'], coords['LocalTrainArrv1']['y'], coords['LocalTrainArrv1']['color']) or \
+        check_pixel(image, coords['LocalTrainArrv2']['x'], coords['LocalTrainArrv2']['y'], coords['LocalTrainArrv2']['color']):
+        return 'arrv'
+    if check_pixel(image, coords['LocalTrainArrvd']['x'], coords['LocalTrainArrvd']['y'], coords['LocalTrainArrvd']['color']):
+        return 'arrvd'
+
 def run(image):
     state = local_state(image)
     if state == 'arrv':
         return
-    
     resend = check_pixel(image, coords['Resend']['x'], coords['Resend']['y'], coords['Resend']['color'])
     if resend and config.get('LocalTrain', 'destination') == 'Metropolis':
         click(coords['Resend']['x'], coords['Resend']['y'])
-        logger.info('RESEND')
-    metropolis(resend)
-    if config.get('LocalTrain', 'destination') != 'Metropolis':
         click(coords['Resend']['x'], coords['Resend']['y'])
         logger.info('RESEND')
-    
-    # Send dest
-        
+        return
+    metropolis(resend)
+    if resend and config.get('LocalTrain', 'destination') != 'Metropolis':
+        click(coords['CloseTrainSend']['x'], coords['CloseTrainSend']['y'])
+        click(coords['CloseTrainSend']['x'], coords['CloseTrainSend']['y'])
+        click(coords['Resend']['x'], coords['Resend']['y'])
+        click(coords['Resend']['x'], coords['Resend']['y'])
+        logger.info('RESEND')
+        return
+    send()
+
+def bonus():
+    click(coords['Bonus']['x'], coords['Bonus']['y'])

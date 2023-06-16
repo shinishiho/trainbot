@@ -42,8 +42,8 @@ def complete():
         screenshot = take_screenshot()
         if check_pixel(screenshot, coords["StartupComplete"]["x"], coords["StartupComplete"]["y"], coords["StartupComplete"]["color"], 0.95):
             swipe(1000, 500, 500, 500)
-            config.set('Emulator', 'width', screenshot.width)
-            config.set('Emulator', 'height', screenshot.height)
+            config['Emulator']['width'] = str(screenshot.width)
+            config['Emulator']['height'] = str(screenshot.height)
             save_config(config)
             logger.info("STARTUP_COMPLETE")
             break

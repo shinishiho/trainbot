@@ -1,12 +1,11 @@
 import tkinter as tk
 import customtkinter as ctk
 import configparser
-from helper.UI import UI
+from helper import UI, load_config
 
 def init():
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    address, port, appearance, theme, scaling, width, height = config.get('Emulator', 'address'), config.get('Emulator', 'port'), config.get('UI', 'appearance'), config.get('UI', 'theme'), config.getfloat('UI', 'scaling'), config.getint('UI', 'width'), config.getint('UI', 'height')
+    config = load_config()
+    appearance, theme, scaling, width, height = config.get('UI', 'appearance'), config.get('UI', 'theme'), config.getfloat('UI', 'scaling'), config.getint('UI', 'width'), config.getint('UI', 'height')
 
     ctk.set_appearance_mode(appearance)
     ctk.set_default_color_theme(theme)
