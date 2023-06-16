@@ -1,8 +1,6 @@
-import configparser
 import subprocess
-import json
 import time
-from resource import logger, check_pixel, take_screenshot
+from helper import logger, check_pixel, take_screenshot, load_coords, load_config, swipe
 
 def start():
     try:
@@ -16,8 +14,7 @@ def start():
         connect()
 
 def connect():
-    config = configparser.ConfigParser()
-    config.read('config.ini')
+    config = load_config()
     addr = config.get('Connection', 'address')
     port = config.get('Connection', 'port')
     output = subprocess.check_output(['adb', 'connect', addr + ':' + port])
@@ -36,15 +33,14 @@ def runapp(addr, port):
         logger.info("STARTUP_SUCCESS")
     
 def complete():
-    with open('data/coords.json', 'r') as file:
-        coords = json.load(file)
+    coords = load_coords()
     i = 0
     while True:
         if i > 5:
             logger.critical("STARTUP_TIMEOUT")
             exit()
         if check_pixel(take_screenshot(), coords["StartupComplete"]["x"], coords["StartupComplete"]["y"], coords["StartupComplete"]["color"], 0.95):
-            subprocess.check_output(['adb', 'shell', 'input', 'touchscreen', 'swipe', '1000', '500', '500', '500'])
+            swipe(1000, 500, 500, 500)
             logger.info("STARTUP_COMPLETE")
             break
         i += 1

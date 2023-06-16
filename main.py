@@ -1,7 +1,7 @@
 import tkinter as tk
 import customtkinter as ctk
 import configparser
-from resource.UI import UI
+from helper.UI import UI
 
 def init():
     config = configparser.ConfigParser()
