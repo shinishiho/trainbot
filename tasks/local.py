@@ -92,6 +92,7 @@ def run(image):
             time.sleep(6)
         else:
             metropolis()
+            send()
         return
     else:
         next_metro = datetime.datetime.strptime(config.get('LocalTrain', 'next_metro'), "%Y-%m-%d %H:%M:%S")

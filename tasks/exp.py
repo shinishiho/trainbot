@@ -31,6 +31,7 @@ def buy():
     back()
     click(coords['Buy']['x'], coords['Buy']['y'])
     click(coords['MaxSlider']['x'], coords['MaxSlider']['y'])
-    click(coords['BuyBtn']['x'], coords['BuyBtn']['y'])
+    click(coords['BuyBtn']['x'], coords['BuyBtn']['y'] + 132)
     click(coords['CloseTrainSend']['x'], coords['CloseTrainSend']['y'])
+    time.sleep(5)
     return
