@@ -41,6 +41,7 @@ def send():
     click(coords['SendTrainBtn']['x'], coords['SendTrainBtn']['y'])
     click(coords['SendTrainBtn']['x'], coords['SendTrainBtn']['y'])
     complete = False
+    i = 0
     while not complete:
         if config.get('LocalTrain', 'destination') == 'Metropolis':
             click(coords['MetropolisOpen']['x'], coords['MetropolisOpen']['y'])
@@ -53,6 +54,10 @@ def send():
                 click(coords['SendTrainBtn']['x'], coords['SendTrainBtn']['y'])
                 break
             if check_pixel(screen, coords['SendTrainComplete']['x'], coords['SendTrainComplete']['y'], coords['SendTrainComplete']['color']):
+                click(coords['CloseTrainSend']['x'], coords['CloseTrainSend']['y'])
+                complete = True
+                break
+            if i > 10:
                 click(coords['CloseTrainSend']['x'], coords['CloseTrainSend']['y'])
                 complete = True
                 break

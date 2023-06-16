@@ -1,4 +1,4 @@
-from tasks import startup, state, local
+from tasks import startup, state, local, expr
 from helper import logger, take_screenshot
 
 def main():
@@ -11,6 +11,8 @@ def main():
             local.run(image)
         if states['Bonus']:
             local.bonus()
+        if states['ExprTrain']:
+            expr.run()
 
 if __name__ == '__main__':
     main()
