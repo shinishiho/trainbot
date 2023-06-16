@@ -22,16 +22,28 @@ def connect():
         logger.critical("CONNECTION_ERROR")
     else:
         logger.info("CONNECTION_SUCCESS")
-        runapp(addr, port)
+        runapp()
 
-def runapp(addr, port):
+def runapp():
+    addr, port = config.get('Emulator', 'address'), config.get('Emulator', 'port')
     output = subprocess.check_output(['adb', '-s', addr + ':' + port, 'shell', 'am', 'start', '-n', 'air.com.pixelfederation.TrainStationGame/com.google.firebase.MessagingUnityPlayerActivity'])
     if output.decode('utf-8').find('Error') != -1:
         print('Failed to start app')
         logger.critical("STARTUP_ERROR")
     else:
         logger.info("STARTUP_SUCCESS")
-    
+
+def quit():
+    addr = config.get('Emulator', 'address')
+    port = config.get('Emulator', 'port')
+    output = subprocess.check_output(['adb', '-s', addr + ':' + port, 'shell', 'am', 'force-stop', 'air.com.pixelfederation.TrainStationGame'])
+    if output.decode('utf-8').find('Error') != -1:
+        print('Failed to quit app')
+        logger.critical("QUIT_ERROR")
+    else:
+        logger.info("QUIT_SUCCESS")
+    time.sleep(5)
+
 def complete():
     coords = load_coords()
     i = 0

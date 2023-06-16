@@ -17,5 +17,7 @@
     "RESEND": "Resending trains to previous destination",
     "WATCH_AD": "Watching ad",
     "AD_COMPLETE": "Ad complete, bonus received",
-    "BUY": "Running low on EXP, buying WAGR"
+    "BUY": "Running low on Passenger, buying WAGR",
+    "QUIT_ERROR": "Failed to quit the game",
+    "QUIT_SUCCESS": "Game quit"
 }
